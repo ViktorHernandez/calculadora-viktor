@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora — Viktor Hernández</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <header class="header">
+    <img src="logo.png" alt="Universidad Tecmilenio" class="logo"/>
+    <div class="header-info">
+      <span class="header-name">Viktor Raúl Hernández Vargas</span>
+      <span class="header-mat">Al03003728</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="title">Calculadora</h1>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('aritmetica', this)">Aritmética</button>
+      <button class="tab" onclick="switchTab('binaria', this)">Binaria</button>
+      <button class="tab" onclick="switchTab('logica', this)">Lógica</button>
+      <button class="tab" onclick="switchTab('historial', this)">Historial</button>
+    </div>
+
+    <section id="aritmetica" class="calc-panel active">
+      <div class="display" id="display-a">0</div>
+      <div class="keypad">
+        <button class="key op" onclick="clearCalc('a')">C</button>
+        <button class="key op" onclick="backspace('a')">⌫</button>
+        <button class="key op" onclick="appendOp('a', '%')">%</button>
+        <button class="key op accent" onclick="appendOp('a', '/')">÷</button>
+        <button class="key" onclick="appendNum('a', '7')">7</button>
+        <button class="key" onclick="appendNum('a', '8')">8</button>
+        <button class="key" onclick="appendNum('a', '9')">9</button>
+        <button class="key op accent" onclick="appendOp('a', '*')">×</button>
+        <button class="key" onclick="appendNum('a', '4')">4</button>
+        <button class="key" onclick="appendNum('a', '5')">5</button>
+        <button class="key" onclick="appendNum('a', '6')">6</button>
+        <button class="key op accent" onclick="appendOp('a', '-')">−</button>
+        <button class="key" onclick="appendNum('a', '1')">1</button>
+        <button class="key" onclick="appendNum('a', '2')">2</button>
+        <button class="key" onclick="appendNum('a', '3')">3</button>
+        <button class="key op accent" onclick="appendOp('a', '+')">+</button>
+        <button class="key wide" onclick="appendNum('a', '0')">0</button>
+        <button class="key" onclick="appendDot('a')">.</button>
+        <button class="key equals" onclick="calculate('a')">=</button>
+      </div>
+      <div class="result-box" id="result-a"></div>
+    </section>
+
+    <section id="binaria" class="calc-panel">
+      <p class="calc-hint">Ingresa números decimales — opera en binario</p>
+      <div class="bin-inputs">
+        <div class="bin-group">
+          <label>Número A</label>
+          <input type="number" id="bin-a" placeholder="Ej: 12"/>
+          <span class="bin-preview" id="prev-a">00000000</span>
+        </div>
+        <div class="bin-ops">
+          <button class="bin-op" onclick="binCalc('AND')">AND</button>
+          <button class="bin-op" onclick="binCalc('OR')">OR</button>
+          <button class="bin-op" onclick="binCalc('XOR')">XOR</button>
+          <button class="bin-op" onclick="binCalc('NOT_A')">NOT A</button>
+          <button class="bin-op" onclick="binCalc('SHL')">SHL</button>
+          <button class="bin-op" onclick="binCalc('SHR')">SHR</button>
+          <button class="bin-op" onclick="binCalc('SUM')">A + B</button>
+          <button class="bin-op" onclick="binCalc('SUB')">A − B</button>
+        </div>
+        <div class="bin-group">
+          <label>Número B</label>
+          <input type="number" id="bin-b" placeholder="Ej: 10"/>
+          <span class="bin-preview" id="prev-b">00000000</span>
+        </div>
+      </div>
+      <div class="bin-result" id="bin-result">
+        <p>Selecciona una operación</p>
+      </div>
+    </section>
+
+    <section id="logica" class="calc-panel">
+      <p class="calc-hint">Ingresa valores booleanos (0 o 1)</p>
+      <div class="logic-inputs">
+        <div class="logic-group">
+          <label>P</label>
+          <div class="toggle-wrap">
+            <button class="toggle-btn active" id="p-btn" onclick="toggleLogic('p')">1</button>
+          </div>
+        </div>
+        <div class="logic-group">
+          <label>Q</label>
+          <div class="toggle-wrap">
+            <button class="toggle-btn active" id="q-btn" onclick="toggleLogic('q')">1</button>
+          </div>
+        </div>
+      </div>
+      <div class="logic-ops">
+        <button class="logic-op" onclick="logicCalc('AND')">P AND Q</button>
+        <button class="logic-op" onclick="logicCalc('OR')">P OR Q</button>
+        <button class="logic-op" onclick="logicCalc('NOT_P')">NOT P</button>
+        <button class="logic-op" onclick="logicCalc('NOT_Q')">NOT Q</button>
+        <button class="logic-op" onclick="logicCalc('NAND')">NAND</button>
+        <button class="logic-op" onclick="logicCalc('NOR')">NOR</button>
+        <button class="logic-op" onclick="logicCalc('XOR')">XOR</button>
+        <button class="logic-op" onclick="logicCalc('XNOR')">XNOR</button>
+        <button class="logic-op" onclick="logicCalc('IMP')">P → Q</button>
+        <button class="logic-op" onclick="logicCalc('BICON')">P ↔ Q</button>
+      </div>
+      <div class="logic-table" id="logic-table"></div>
+    </section>
+
+    <section id="historial" class="calc-panel">
+      <div class="hist-header">
+        <span class="hist-title">Registro de operaciones</span>
+        <button class="hist-clear" onclick="clearHistory()">Limpiar</button>
+      </div>
+      <div class="hist-counter">
+        <span id="hist-count">0</span> operaciones registradas
+      </div>
+      <div class="hist-list" id="hist-list">
+        <div class="hist-empty">
+          <span class="hist-empty-icon">⊘</span>
+          <p>Aún no hay operaciones.</p>
+          <p>Usa la calculadora y los resultados aparecerán aquí.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let exprA = '';
+    const history = [];
+
+    function now() {
+      return new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function addHistory(tipo, expresion, resultado, badge) {
+      history.unshift({ tipo, expresion, resultado, badge, hora: now() });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('hist-list');
+      document.getElementById('hist-count').textContent = history.length;
+      if (history.length === 0) {
+        list.innerHTML = '<div class="hist-empty"><span class="hist-empty-icon">⊘</span><p>Aún no hay operaciones.</p><p>Usa la calculadora y los resultados aparecerán aquí.</p></div>';
+        return;
+      }
+      list.innerHTML = history.map((h, i) =>
+        '<div class="hist-item ' + (i === 0 ? 'hist-new' : '') + '">' +
+          '<div class="hist-item-top">' +
+            '<span class="hist-badge hist-badge-' + h.badge + '">' + h.tipo + '</span>' +
+            '<span class="hist-hora">' + h.hora + '</span>' +
+          '</div>' +
+          '<div class="hist-expr">' + h.expresion + '</div>' +
+          '<div class="hist-res">= ' + h.resultado + '</div>' +
+        '</div>'
+      ).join('');
+    }
+
+    function clearHistory() {
+      history.length = 0;
+      renderHistory();
+    }
+
+    function updateDisplay(id, val) {
+      document.getElementById(id).textContent = val || '0';
+    }
+
+    function appendNum(c, n) {
+      if (c === 'a') { exprA += n; updateDisplay('display-a', exprA); }
+    }
+    function appendOp(c, op) {
+      if (c === 'a') { exprA += op; updateDisplay('display-a', exprA); }
+    }
+    function appendDot(c) {
+      if (c === 'a') {
+        const parts = exprA.split(/[\+\-\*\/]/);
+        if (!parts[parts.length-1].includes('.')) { exprA += '.'; updateDisplay('display-a', exprA); }
+      }
+    }
+    function clearCalc(c) {
+      if (c === 'a') { exprA = ''; updateDisplay('display-a', '0'); document.getElementById('result-a').textContent = ''; }
+    }
+    function backspace(c) {
+      if (c === 'a') { exprA = exprA.slice(0, -1); updateDisplay('display-a', exprA || '0'); }
+    }
+    function calculate(c) {
+      if (c === 'a') {
+        try {
+          const res = Function('"use strict"; return (' + exprA + ')')();
+          const resStr = parseFloat(res.toFixed(10));
+          document.getElementById('result-a').textContent = '= ' + resStr;
+          addHistory('Aritmética', exprA, resStr, 'arit');
+          exprA = String(res);
+          updateDisplay('display-a', exprA);
+        } catch { document.getElementById('result-a').textContent = 'Error'; exprA = ''; }
+      }
+    }
+
+    document.getElementById('bin-a').addEventListener('input', updatePreviews);
+    document.getElementById('bin-b').addEventListener('input', updatePreviews);
+    function updatePreviews() {
+      const a = parseInt(document.getElementById('bin-a').value) || 0;
+      const b = parseInt(document.getElementById('bin-b').value) || 0;
+      document.getElementById('prev-a').textContent = (a >>> 0).toString(2).padStart(8,'0');
+      document.getElementById('prev-b').textContent = (b >>> 0).toString(2).padStart(8,'0');
+    }
+    function binCalc(op) {
+      const a = parseInt(document.getElementById('bin-a').value) || 0;
+      const b = parseInt(document.getElementById('bin-b').value) || 0;
+      let res, label;
+      switch(op) {
+        case 'AND':   res = a & b;  label = a + ' AND ' + b; break;
+        case 'OR':    res = a | b;  label = a + ' OR ' + b;  break;
+        case 'XOR':   res = a ^ b;  label = a + ' XOR ' + b; break;
+        case 'NOT_A': res = ~a;     label = 'NOT ' + a;       break;
+        case 'SHL':   res = a << 1; label = a + ' << 1';      break;
+        case 'SHR':   res = a >> 1; label = a + ' >> 1';      break;
+        case 'SUM':   res = a + b;  label = a + ' + ' + b;    break;
+        case 'SUB':   res = a - b;  label = a + ' - ' + b;    break;
+      }
+      document.getElementById('bin-result').innerHTML =
+        '<div class="bin-row"><span class="bin-lbl">Operación</span><span class="bin-val">' + label + '</span></div>' +
+        '<div class="bin-row"><span class="bin-lbl">Decimal</span><span class="bin-val">' + res + '</span></div>' +
+        '<div class="bin-row"><span class="bin-lbl">Binario</span><span class="bin-val mono">' + (res >>> 0).toString(2).padStart(8,'0') + '</span></div>' +
+        '<div class="bin-row"><span class="bin-lbl">Hexadecimal</span><span class="bin-val mono">0x' + (res >>> 0).toString(16).toUpperCase() + '</span></div>';
+      addHistory('Binaria', label, 'Dec: ' + res + ' | Bin: ' + (res>>>0).toString(2).padStart(8,'0'), 'bin');
+    }
+
+    const logicState = { p: 1, q: 1 };
+    function toggleLogic(v) {
+      logicState[v] = logicState[v] ? 0 : 1;
+      const btn = document.getElementById(v + '-btn');
+      btn.textContent = logicState[v];
+      btn.classList.toggle('active', logicState[v] === 1);
+    }
+    function logicCalc(op) {
+      const p = logicState.p, q = logicState.q;
+      let res, expr;
+      switch(op) {
+        case 'AND':   res = p & q;            expr = p + ' AND ' + q; break;
+        case 'OR':    res = p | q;            expr = p + ' OR ' + q;  break;
+        case 'NOT_P': res = p ? 0 : 1;       expr = 'NOT ' + p;       break;
+        case 'NOT_Q': res = q ? 0 : 1;       expr = 'NOT ' + q;       break;
+        case 'NAND':  res = (p & q) ? 0 : 1; expr = p + ' NAND ' + q; break;
+        case 'NOR':   res = (p | q) ? 0 : 1; expr = p + ' NOR ' + q;  break;
+        case 'XOR':   res = p ^ q;            expr = p + ' XOR ' + q;  break;
+        case 'XNOR':  res = (p ^ q) ? 0 : 1; expr = p + ' XNOR ' + q; break;
+        case 'IMP':   res = (!p || q) ? 1 : 0; expr = p + ' → ' + q; break;
+        case 'BICON': res = (p === q) ? 1 : 0; expr = p + ' ↔ ' + q; break;
+      }
+      const rows = [[0,0],[0,1],[1,0],[1,1]].map(function(pair) {
+        const a = pair[0], b = pair[1];
+        let r;
+        switch(op) {
+          case 'AND':   r = a & b; break;
+          case 'OR':    r = a | b; break;
+          case 'NOT_P': r = a ? 0 : 1; break;
+          case 'NOT_Q': r = b ? 0 : 1; break;
+          case 'NAND':  r = (a & b) ? 0 : 1; break;
+          case 'NOR':   r = (a | b) ? 0 : 1; break;
+          case 'XOR':   r = a ^ b; break;
+          case 'XNOR':  r = (a ^ b) ? 0 : 1; break;
+          case 'IMP':   r = (!a || b) ? 1 : 0; break;
+          case 'BICON': r = (a === b) ? 1 : 0; break;
+        }
+        const cur = (a === p && b === q) ? ' current-row' : '';
+        return '<tr class="' + cur + '"><td>' + a + '</td><td>' + b + '</td><td class="' + (r ? 'true' : 'false') + '">' + r + '</td></tr>';
+      }).join('');
+      document.getElementById('logic-table').innerHTML =
+        '<p class="logic-expr">' + expr + ' = <strong>' + res + '</strong></p>' +
+        '<table><thead><tr><th>P</th><th>Q</th><th>Resultado</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      addHistory('Lógica', expr, res, 'log');
+    }
+
+    function switchTab(id, btn) {
+      document.querySelectorAll('.calc-panel').forEach(function(p) { p.classList.remove('active'); });
+      document.querySelectorAll('.tab').forEach(function(b) { b.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

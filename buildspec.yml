@@ -1,0 +1,36 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "Instalando dependencias"
+
+  pre_build:
+    commands:
+      - echo "Validando archivos fuente"
+      - test -f app/index.html || exit 1
+      - test -f app/style.css  || exit 1
+      - test -f app/logo.png   || exit 1
+
+  build:
+    commands:
+      - echo "Preparando artefactos"
+      - mkdir -p dist
+      - cp -r app/* dist/
+      - echo "Archivos en dist:"
+      - ls -la dist/
+
+  post_build:
+    commands:
+      - echo "Sincronizando con S3"
+      - aws s3 sync dist/ s3://$BUCKET_NAME/ --delete
+      - python backup.py
+      - aws s3 cp backup.log s3://$BUCKET_NAME/backup.log
+      - echo "Despliegue completado en http://$BUCKET_NAME.s3-website-us-east-1.amazonaws.com"
+
+artifacts:
+  files:
+    - "dist/**/*"
+  discard-paths: no
